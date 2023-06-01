@@ -1,0 +1,20 @@
+body {
+    box-sizing: border-box;
+    height: 100vh;
+    width: 100%;
+}
+
+#board-container {
+    display: grid;
+    border: solid;
+    width: 300px;
+    height: 300px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}
+
+.row {
+    display: grid;
+    border: solid;
+    width: 100%;
+}

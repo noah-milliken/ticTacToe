@@ -2,27 +2,32 @@
 
 
 const gameBoard = (() => {
-    let grid = [[1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9]
-    ]
+    let grid = ['', '', '', '', '', '', '', '', '']
 
     const renderGrid = () => {
         const gridData = grid;
         const boardContainer = document.getElementById('board-container')
+        boardContainer.innerHTML = ''
         for (let i = 0; i < gridData.length; i++) {
-            const row = document.createElement('div')
-            for (let j = 0; j < grid[i].length; j++) {
-                const square = document.createElement('button')
-                square.textContent = grid[i][j]
-                row.appendChild(square)
-            }
-            boardContainer.appendChild(row)
+            const square = document.createElement('button')
+            square.textContent = gridData[i]
+            square.addEventListener('click', () => {
+                game.handleButtonClick(i)
+                renderGrid()
+                console.log(gridData)
+            })
+            boardContainer.appendChild(square)
         }
-        return boardContainer
 
-    }
+
+
+    };
     renderGrid()
+    return {
+        grid
+    }
+
+
 
 })()
 
@@ -34,6 +39,51 @@ function playerFactory(playerName, marker) {
 const game = (() => {
     const playerOne = playerFactory('Bob', 'X')
     const playerTwo = playerFactory('Frank', 'O')
+    let currentPlayer = playerOne
+    let squaresPlayed = 9
+
+
+
+    const changeTurn = () => {
+        currentPlayer = currentPlayer === playerOne ? currentPlayer = playerTwo : currentPlayer = playerOne
+    }
+
+    const handleButtonClick = (index) => {
+        if (gameBoard.grid[index] === '') {
+            gameBoard.grid[index] = currentPlayer.marker
+            squaresPlayed--
+
+            changeTurn()
+            checkTie(squaresPlayed)
+            checkWinner()
+        }
+
+
+    }
+    const checkWinner = () => {
+        const winningArray = [[0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]]
+        if (gameBoard.grid[4] === currentPlayer.marker) {
+            console.log('winner')
+        }
+
+    }
+
+    const checkTie = (number) => {
+        if (!number) {
+            console.log('tie game')
+        }
+    }
+
+    return {
+        handleButtonClick
+    }
 
 
 })()
