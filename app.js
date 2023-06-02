@@ -16,11 +16,23 @@ const gameBoard = (() => {
             boardContainer.appendChild(square);
         }
     };
+    const setGrid = (newGrid) => {
+        grid = newGrid
+
+    }
+    const gameOver = (currentPlayer) => {
+        console.log(`game over ${currentPlayer.playerName} has won the game`)
+        setGrid(['', '', '', '', '', '', '', '', ''])
+
+
+
+
+    }
 
     renderGrid();
 
     return {
-        grid
+        grid, gameOver
     };
 })();
 
@@ -43,9 +55,10 @@ const game = (() => {
             gameBoard.grid[index] = currentPlayer.marker;
             squaresPlayed--;
 
-            changeTurn();
+
             checkTie(squaresPlayed);
             checkWinner();
+            changeTurn();
         }
     };
 
@@ -70,24 +83,17 @@ const game = (() => {
             const checkArr = [a, b, c]
 
             const winValue = currentPlayer.marker
-            // function allEqual(arr) {
-            //     const result = arr.every(winValue => {
-            //         if (winValue === arr[0]) {
-            //             return true
-            //         }
-            //     })
-            //     return result
-            // }
-            // console.log(allEqual(checkArr))
-            console.log(winValue)
             const allEqual = arr => arr.every(element => element === winValue)
+            const result = allEqual(checkArr)
+            if (result) {
 
-            console.log(allEqual(checkArr))
+                gameBoard.gameOver(currentPlayer)
+            }
         })
 
 
-    };
 
+    };
 
     const checkTie = (number) => {
         if (!number) {
