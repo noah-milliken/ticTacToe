@@ -1,61 +1,68 @@
 const gameBoard = (() => {
-    let grid = ['', '', '', '', '', '', '', '', ''];
+    const initialGrid = ['', '', '', '', '', '', '', '', '']
+    let grid = initialGrid;
 
     const renderGrid = () => {
-        const gridData = grid;
+        let gridData = grid;
         const boardContainer = document.getElementById('board-container');
         boardContainer.innerHTML = '';
         for (let i = 0; i < gridData.length; i++) {
             const square = document.createElement('button');
             square.textContent = gridData[i];
+            square.setAttribute('class', 'square')
             square.addEventListener('click', () => {
                 game.handleButtonClick(i);
                 renderGrid();
 
+
             });
+            console.log('hi')
             boardContainer.appendChild(square);
         }
-    };
+
+
+        // let turnDiv = document.createElement('div')
+        // turnDiv.innerText = `${game.currentPlayer.playerName}`
+        // document.appendChild(turnDiv)
+
+    }
     const setGrid = (newGrid) => {
         grid = newGrid
+        console.log(grid)
+        renderGrid()
 
     }
-    const gameOver = (currentPlayer) => {
-        console.log(`game over ${currentPlayer.playerName} has won the game`)
-        setGrid(['', '', '', '', '', '', '', '', ''])
 
-
-
-
-    }
 
     renderGrid();
 
     return {
-        grid, gameOver
+        grid, setGrid, renderGrid
     };
 })();
 
 function playerFactory(playerName, marker) {
+
     return { playerName, marker };
 }
 
 const game = (() => {
-    const playerOne = playerFactory('Bob', 'X');
-    const playerTwo = playerFactory('Frank', 'O');
+
+    const playerOne = playerFactory('bob', 'X')
+    const playerTwo = playerFactory('frank', 'O')
     let currentPlayer = playerOne;
     let squaresPlayed = 9;
 
     const changeTurn = () => {
         currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
+
     };
+
 
     const handleButtonClick = (index) => {
         if (gameBoard.grid[index] === '') {
             gameBoard.grid[index] = currentPlayer.marker;
             squaresPlayed--;
-
-
             checkTie(squaresPlayed);
             checkWinner();
             changeTurn();
@@ -87,21 +94,37 @@ const game = (() => {
             const result = allEqual(checkArr)
             if (result) {
 
-                gameBoard.gameOver(currentPlayer)
+                gameOver(currentPlayer)
             }
         })
 
 
 
     };
-
     const checkTie = (number) => {
         if (!number) {
-            console.log('tie game');
+            gameOver('Tie Game')
         }
     };
+    const gameOver = (currentPlayer) => {
+        console.log(`game over ${currentPlayer.playerName} has won the game`)
+        resetGame()
+
+    }
+    const resetGame = () => {
+        currentPlayer = playerOne
+        squaresPlayed = 9
+        gameBoard.setGrid(['', '', '', '', '', '', '', '', ''])
+        console.log(currentPlayer, squaresPlayed, gameBoard.grid)
+    }
+
+
+
 
     return {
-        handleButtonClick
+        handleButtonClick,
+        gameOver,
+        resetGame,
+        currentPlayer
     };
 })();
